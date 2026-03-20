@@ -14,14 +14,14 @@ As I don't have a 3d printer, I opted for getting off the shelf components for t
 chassis and motors. This also helped solve a problem I was having with motor
 drivers in previous prototypes. I was then able to focus more on the software.
 
-My setup is a little unique. I took this [kit](https://us.elegoo.com/products/elegoo-smart-robot-car-kit-v-4-0?utm_source=officiallisting&utm_medium=referral&utm_id=usstore), and installed the StandardFirmata file onto the Arduino. Currently
+My setup is a little unique. I took this [kit](https://us.elegoo.com/products/elegoo-smart-robot-car-kit-v-4-0?utm_source=officiallisting&utm_medium=referral&utm_id=usstore), and installed the FirmataExpress file onto the Arduino. Currently
 the only things plugged into the Arduino are the motors. I then connected the
 Raspberry Pi to the Arduino via USB. The Raspberry Pi serves as the master
 controller and handles the web interface and sends inputs to the Arduino.
 
 ### Software
 
-The software is currently based on the headless version of Raspberry Pi OS. It automatically starts hosting wifi on boot. Currently it is nessacary to ssh into the pi to start the web server, but I plan to automate this in the future. The web server then takes keyboard inputs from the user and sends them to the Arduino to control the motors. The camera module streams video back to the web interface for real-time viewing.
+The software is currently based on the headless version of Raspberry Pi OS. It automatically starts hosting wifi on boot. Currently it is necassary to ssh into the pi to start the web server, but I plan to automate this in the future. The web server then takes keyboard inputs from the user and sends them to the Arduino to control the motors. The camera module streams video back to the web interface for real-time viewing.
 
 ### Running the Software
 
