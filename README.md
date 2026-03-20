@@ -23,6 +23,15 @@ controller and handles the web interface and sends inputs to the Arduino.
 
 The software is currently based on the headless version of Raspberry Pi OS. It automatically starts hosting wifi on boot. Currently it is nessacary to ssh into the pi to start the web server, but I plan to automate this in the future. The web server then takes keyboard inputs from the user and sends them to the Arduino to control the motors. The camera module streams video back to the web interface for real-time viewing.
 
+### Running the Software
+
+To set up this project, I recommend using the parts listed below and cloning this repository onto the Raspberry PI.
+Then you can set up a uv virtual environment and install the dependencies by running `uv sync` in the project root. Finally you can start the web server buy running:
+```bash
+uv run python -m src.rc_controls.backend
+```
+in the project root.
+
 ### Hardware Requirements
 
 Here is a list of the main hardware components needed:
