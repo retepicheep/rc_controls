@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Robot FPV Control</title>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/hud.css') }}">
+</head>
+
+<body>
+    <!-- Video feed -->
+    <img id="video" src="{{ url_for('video_feed') }}" alt="Camera unavailable">
+
+    <!-- HUD overlay -->
+    <div id="hud">
+        <div id="speed">SPD: --</div>
+        <div id="system-health">
+            <div class="health-item" id="cpu-temp">Temp: CPU: --</div>
+            <div class="health-item" id="cpu-load">Load: SYS: --</div>
+            <div class="health-item" id="wifi-strength">Connection: LINK: --</div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/control.js') }}" type="module"></script>
+</body>
+
+</html>
