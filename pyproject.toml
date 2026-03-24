@@ -12,6 +12,3 @@ dependencies = [
     "simplejpeg>=1.9.0",
     "websockets>=16.0",
 ]
-
-[tool.uv]
-system-site-packages = true
