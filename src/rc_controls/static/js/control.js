@@ -12,6 +12,7 @@ let websocket;
 
 window.addEventListener("DOMContentLoaded", () => {
     websocket = new WebSocket(`ws://${window.location.hostname}:8001/`);
+    recieveSysData();
 });
 
 document.addEventListener("keydown", e => {

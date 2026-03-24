@@ -9,7 +9,7 @@ def get_cpu_temp():
 
 def get_cpu_load():
     """Return CPU load as a percentage over a 0.5s sample window."""
-    return psutil.cpu_percent(interval=0.5)
+    return psutil.cpu_percent()
 
 
 def get_wifi_strength():
