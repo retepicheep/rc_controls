@@ -22,28 +22,28 @@ class Drive:
         board.set_pin_mode_pwm_output(self.PIN_PWMB)
         board.set_pin_mode_digital_output(self.PIN_BIN1)
 
+    def _set_motors(self, left_speed: int, ain1: int, right_speed: int, bin1: int):
+        self.board.digital_write(self.PIN_STBY, 1)
+        self.board.pwm_write(self.PIN_PWMA, left_speed)
+        self.board.digital_write(self.PIN_AIN1, ain1)
+        self.board.pwm_write(self.PIN_PWMB, right_speed)
+        self.board.digital_write(self.PIN_BIN1, bin1)
+
     def drive(self, direction: int, left_speed: int = 200, right_speed: int = 200):
-        """Drive forward (1) or backward (-1) at speed 0–255."""
-        if direction in (1, -1):
-            self.board.digital_write(self.PIN_STBY, 1)
-            self.board.pwm_write(self.PIN_PWMA, left_speed)
-            self.board.digital_write(self.PIN_AIN1, 1 if direction == 1 else 0)
-            self.board.pwm_write(self.PIN_PWMB, right_speed)
-            self.board.digital_write(self.PIN_BIN1, 1 if direction == 1 else 0)
-        else:
+        """Drive forward (1) or backward (-1)."""
+        if direction not in (1, -1):
             print("Invalid direction: must be 1 (forward) or -1 (backward)")
+            return
+        d = 1 if direction == 1 else 0
+        self._set_motors(left_speed, d, right_speed, d)
 
     def rotate(self, direction: int, left_speed: int = 200, right_speed: int = 200):
         """Rotate in place: 1 = right, -1 = left."""
-        if direction in (1, -1):
-            self.board.digital_write(self.PIN_STBY, 1)
-            self.board.pwm_write(self.PIN_PWMA, left_speed)
-            self.board.digital_write(self.PIN_AIN1, 1 if direction == 1 else 0)
-            self.board.pwm_write(self.PIN_PWMB, right_speed)
-            # Opposite direction on second motor
-            self.board.digital_write(self.PIN_BIN1, 0 if direction == 1 else 1)
-        else:
+        if direction not in (1, -1):
             print("Invalid direction: must be 1 (right) or -1 (left)")
+            return
+        d = 1 if direction == 1 else 0
+        self._set_motors(left_speed, d, right_speed, 1 - d)  # BIN1 is opposite
 
     def stop(self):
         """Stop both motors."""
