@@ -1,8 +1,9 @@
 from quart import Quart, Response, render_template, stream_with_context
 from pymata4 import pymata4
+from websockets.asyncio.server import serve
 from .arduino_interface import Drive
 from .video import generate_frames
-from websockets.asyncio.server import serve
+from .system_health import return_sys_health
 
 import asyncio
 import json
@@ -21,6 +22,9 @@ async def relay_info(websocket):
     async for message in websocket:
         event = json.loads(message)
         receive_commands(event)
+        await websocket.send(return_sys_health())
+    
+
 
 
 def receive_commands(cmds: list):

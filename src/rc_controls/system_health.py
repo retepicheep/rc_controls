@@ -1,4 +1,5 @@
 import psutil
+import json
 
 def get_cpu_temp():
     """Return CPU temperature in degrees Celsius."""
@@ -35,3 +36,13 @@ def get_wifi_strength():
     else:            quality = "Very Poor"
 
     return dbm, percent, quality
+
+def return_sys_health():
+    return json.dumps({
+        "cpu_temp": get_cpu_temp(),
+        "cpu_load": get_cpu_load(),
+        "wifi_strength": get_wifi_strength()
+    })
+
+if __name__ == "__main__":
+    print(return_sys_health())
