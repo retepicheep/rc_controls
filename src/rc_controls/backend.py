@@ -1,7 +1,7 @@
 from quart import Quart, Response, render_template, stream_with_context
 from pymata4 import pymata4
 from .arduino_interface import Drive
-from .system_info import generate_frames
+from .video import generate_frames
 from websockets.asyncio.server import serve
 
 import asyncio
