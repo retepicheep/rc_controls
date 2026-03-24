@@ -1,20 +1,5 @@
-from picamera2 import Picamera2
-from simplejpeg import encode_jpeg
 import psutil
-
-
-# Initialize and start the camera
-camera = Picamera2()
-camera.configure(camera.create_preview_configuration())
-camera.start()
-
-
-async def generate_frames():
-    while True:
-        frame = camera.capture_array()
-        jpeg = encode_jpeg(frame, quality=85, colorspace="BGRA")
-        yield b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n"
-
+import json
 
 def get_cpu_temp():
     """Return CPU temperature in degrees Celsius."""
@@ -24,7 +9,7 @@ def get_cpu_temp():
 
 def get_cpu_load():
     """Return CPU load as a percentage over a 0.5s sample window."""
-    return psutil.cpu_percent(interval=0.5)
+    return psutil.cpu_percent()
 
 
 def get_wifi_strength():
@@ -51,3 +36,13 @@ def get_wifi_strength():
     else:            quality = "Very Poor"
 
     return dbm, percent, quality
+
+def return_sys_health():
+    return json.dumps({
+        "cpu_temp": get_cpu_temp(),
+        "cpu_load": get_cpu_load(),
+        "wifi_strength": get_wifi_strength()
+    })
+
+if __name__ == "__main__":
+    print(return_sys_health())

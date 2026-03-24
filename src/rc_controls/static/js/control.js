@@ -12,6 +12,7 @@ let websocket;
 
 window.addEventListener("DOMContentLoaded", () => {
     websocket = new WebSocket(`ws://${window.location.hostname}:8001/`);
+    recieveSysData();
 });
 
 document.addEventListener("keydown", e => {
@@ -42,5 +43,18 @@ function sendCommands() {
         const payload = JSON.stringify([...pressed]);
         console.log("sending:", payload);
         websocket.send(payload);
+    }
+}
+
+function recieveSysData() {
+    try {
+        websocket.addEventListener("message", ({ data }) => {
+            const parsed_data = JSON.parse(data)
+            document.getElementById("cpu-temp").innerText = "Temp: CPU: " + parsed_data.cpu_temp;
+            document.getElementById("cpu-load").innerText = "Load: SYS: " + parsed_data.cpu_load;
+            document.getElementById("wifi-strength").innerText = "Connection: LINK: " + parsed_data.wifi_strength;
+        });
+    } catch (err) {
+        console.error("Failed to fetch system health:", err);
     }
 }

@@ -1,8 +1,9 @@
 from quart import Quart, Response, render_template, stream_with_context
 from pymata4 import pymata4
-from .arduino_interface import Drive
-from .system_info import generate_frames
 from websockets.asyncio.server import serve
+from .arduino_interface import Drive
+from .video import generate_frames_async
+from .system_health import return_sys_health
 
 import asyncio
 import json
@@ -10,6 +11,7 @@ import json
 # Create Quart app
 
 app = Quart(__name__)
+app.config["RESPONSE_TIMEOUT"] = None  # disable timeout for streaming
 
 # initialize the arduino board
 
@@ -17,10 +19,26 @@ board = pymata4.Pymata4()  # auto-detects port (requires FirmataExpress)
 driver = Drive(board)
 
 async def relay_info(websocket):
+    loop = asyncio.get_event_loop()
+
+    async def health_push():
+        while True:
+            await asyncio.sleep(1.0)
+            try:
+                health = await loop.run_in_executor(None, return_sys_health)  # run blocking call off the event loop
+                await websocket.send(health)
+            except Exception:
+                break
+
+    health_task = asyncio.create_task(health_push())
+    try:
+        async for message in websocket:
+            event = json.loads(message)
+            receive_commands(event)
+    finally:
+        health_task.cancel()
     
-    async for message in websocket:
-        event = json.loads(message)
-        receive_commands(event)
+
 
 
 def receive_commands(cmds: list):
@@ -70,12 +88,16 @@ async def control():
 async def video_feed():
     @stream_with_context
     async def stream():
-        async for frame in generate_frames():
+        async for frame in generate_frames_async():
             yield frame
     return Response(
         stream(),
         mimetype="multipart/x-mixed-replace; boundary=frame",
-        headers={"X-Accel-Buffering": "no", "Cache-Control": "no-cache"}
+        headers={
+            "X-Accel-Buffering": "no",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",  # add this
+        }
     )
 
 async def main():
