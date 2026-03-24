@@ -44,3 +44,15 @@ function sendCommands() {
         websocket.send(payload);
     }
 }
+
+function recieveSysData() {
+    try {
+        websocket.addEventListener("message", ({ data }) => {
+            document.getElementById("cpu-temp").innerText = "Temp: CPU: " + data.cpu_temp;
+            document.getElementById("cpu-load").innerText = "Load: SYS: " + data.cpu_load;
+            document.getElementById("wifi-strength").innerText = "Connection: LINK: " + data.wifi_strength;
+        });
+    } catch (err) {
+        console.error("Failed to fetch system health:", err);
+    }
+}
