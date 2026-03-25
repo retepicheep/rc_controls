@@ -103,6 +103,10 @@ def receive_commands(cmds: list):
             driver.stop()
             log.info("No movement keys pressed, stopping vehicle.")
 
+@app.route("/")
+async def home():
+    return await render_template("home.html")
+
 @app.route("/control")
 async def control():
     return await render_template("control.html")
