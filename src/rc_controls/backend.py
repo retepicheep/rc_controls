@@ -1,13 +1,18 @@
-from quart import Quart, Response, render_template, stream_with_context
+from quart import Quart, Response, render_template, stream_with_context, session, redirect, url_for, request
+from functools import wraps
 from pymata4 import pymata4
 from websockets.asyncio.server import serve
 from .arduino_interface import Drive
 from .video import generate_frames_async
 from .system_health import return_sys_health
 from .logger import setup_logger
-
+import os
 import asyncio
 import json
+
+ADMIN_USER = os.getenv("ROBOTCAR_USER")
+ADMIN_PASS = os.getenv("ROBOTCAR_PASS")
+FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY")
 
 # initiate logger
 
@@ -25,6 +30,15 @@ board = pymata4.Pymata4()  # auto-detects port (requires FirmataExpress)
 driver = Drive(board)
 last_cmds = None
 log.info(f"Initilized board {board} and driver {driver}.")
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("authenticated"):
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 async def relay_info(websocket):
     loop = asyncio.get_event_loop()
@@ -104,14 +118,32 @@ def receive_commands(cmds: list):
             log.info("No movement keys pressed, stopping vehicle.")
 
 @app.route("/")
+@login_required
 async def home():
     return await render_template("home.html")
 
 @app.route("/control")
+@login_required
 async def control():
     return await render_template("control.html")
 
+@app.route("/login", methods=["GET", "POST"])
+async def login():
+    if request.method == "POST":
+        form = await request.form
+        username = form.get("username")
+        password = form.get("password")
+
+        if username == ADMIN_USER and password == ADMIN_PASS:
+            session["authenticated"] = True
+            return redirect(url_for("home"))
+        else:
+            return await render_template("login.html", error="Invalid credentials")
+
+    return await render_template("login.html")
+
 @app.route("/video_feed")
+@login_required
 async def video_feed():
     @stream_with_context
     async def stream():

@@ -1,12 +1,14 @@
+/* Base */
 body {
     margin: 0;
     padding: 0;
-    font-family: monospace, "Courier New", Courier;
+    font-family: "Courier New", Courier, monospace;
     background-color: #0d0d0d;
     color: #00ff88;
     text-shadow: 0 0 4px #008844;
 }
 
+/* Header */
 header {
     background-color: #111;
     border-bottom: 2px solid #00ff88;
@@ -20,6 +22,7 @@ header h1 {
     letter-spacing: 3px;
 }
 
+/* Nav */
 nav {
     margin-top: 0.5rem;
 }
@@ -39,6 +42,7 @@ nav a:hover {
     color: #0d0d0d;
 }
 
+/* Main & Sections */
 main {
     padding: 2rem;
     max-width: 800px;
@@ -58,10 +62,59 @@ h2 {
     padding-bottom: 0.2rem;
 }
 
+/* Footer */
 footer {
     text-align: center;
     padding: 1rem;
     background-color: #111;
     border-top: 2px solid #00ff88;
     font-size: 0.9rem;
+}
+
+/* Login */
+.login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    text-align: center;
+}
+
+.login-container label {
+    display: block;
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.login-container input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 0.3rem;
+    padding: 0.4rem 0.6rem;
+    background: #0d0d0d;
+    border: 1px solid #00ff88;
+    color: #00ff88;
+    font-family: "Courier New", Courier, monospace;
+    border-radius: 4px;
+}
+
+.login-container button {
+    margin-top: 1.5rem;
+    padding: 0.5rem 1.2rem;
+    background: transparent;
+    border: 1px solid #00ff88;
+    color: #00ff88;
+    font-family: "Courier New", Courier, monospace;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.login-container button:hover {
+    background: #00ff88;
+    color: #0d0d0d;
+}
+
+.error {
+    color: #ff4444;
+    text-shadow: 0 0 4px #880000;
 }
